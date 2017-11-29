@@ -752,7 +752,7 @@ public class Mailbox implements MailboxStore {
 
     // This class handles all the indexing internals for the Mailbox
     public final MailboxIndex index;
-    public final DistributedMailboxLock lock;
+    public final DistributedMailboxLockManager lockManager;
     private Map<MessageCallback.Type, MessageCallback> callbacks;
     /**
      * Bug: 94985 - Only allow one large empty folder operation to run at a time
@@ -793,7 +793,7 @@ public class Mailbox implements MailboxStore {
         // version init done in open()
         // index init done in open()
 
-        lock = new DistributedMailboxLock(data.accountId, this);
+        lockManager = new DistributedMailboxLockManager(data.accountId, this);
         callbacks = new HashMap<>();
         callbacks.put(MessageCallback.Type.sent, new SentMessageCallback());
         callbacks.put(MessageCallback.Type.received, new ReceivedMessageCallback());
@@ -844,6 +844,7 @@ public class Mailbox implements MailboxStore {
             return false;
         }
 
+        final DistributedMailboxLock lock = lockManager.writeLock();
         lock.lock();
         try {
             if (open) { // double checked locking
@@ -1498,6 +1499,7 @@ public class Mailbox implements MailboxStore {
      *
      * @see #recordLastSoapAccessTime(long) */
     public long getLastSoapAccessTime() {
+        final DistributedMailboxLock lock = lockManager.readLock();
         lock.lock(false);
         try {
             long lastAccess = (currentChange().accessed == MailboxChange.NO_CHANGE ? mData.lastWriteDate

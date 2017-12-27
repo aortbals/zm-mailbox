@@ -497,8 +497,38 @@ public class InternetAddress implements Cloneable {
             parse(content, start, length, true);
         } else {
             this.display = base != null ? base : comment == null ? null : comment.toString();
+            this.display = sanitizeString(this.display);
             this.email = address == null ? null : address.toString().trim();
         }
+    }
+
+    private static String sanitizeString(String value) {
+        if (value != null) {
+            StringBuilder newString = new StringBuilder(value.length());
+            for (int offset = 0; offset < value.length();) {
+                int codePoint = value.codePointAt(offset);
+                offset += Character.charCount(codePoint);
+                // Replace invisible control characters and unused code points
+                switch (Character.getType(codePoint)) {
+                case Character.CONTROL: // \p{Cc}
+                case Character.FORMAT: // \p{Cf}
+                case Character.PRIVATE_USE: // \p{Co}
+                case Character.SURROGATE: // \p{Cs}
+                case Character.UNASSIGNED: // \p{Cn}
+                    break;
+                case Character.LINE_SEPARATOR:
+                case Character.PARAGRAPH_SEPARATOR:
+                case Character.SPACE_SEPARATOR:
+                    newString.append(" ");
+                    break;
+                default:
+                    newString.append(Character.toChars(codePoint));
+                    break;
+                }
+            }
+            return newString.toString();
+        }
+        return null;
     }
 
     private static boolean isValidDotAtom(String content) {

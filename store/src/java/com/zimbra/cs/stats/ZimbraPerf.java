@@ -588,7 +588,7 @@ public class ZimbraPerf {
         long now = System.currentTimeMillis();
         if (now - mailboxCacheSizeTimestamp > Constants.MILLIS_PER_MINUTE) {
             try {
-                mailboxCacheSize = MailboxManager.getInstance().getCacheSize();
+                mailboxCacheSize = MailboxManager.getInstance().cacheManager.getCacheSize();
             } catch (ServiceException e) {
                 ZimbraLog.perf.warn("Unable to determine mailbox cache size.", e);
             }

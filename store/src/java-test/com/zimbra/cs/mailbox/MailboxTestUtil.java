@@ -18,7 +18,6 @@
 package com.zimbra.cs.mailbox;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -207,7 +206,7 @@ public final class MailboxTestUtil {
      */
     public static void clearData(String zimbraServerDir) throws Exception {
         HSQLDB.clearDatabase(zimbraServerDir);
-        MailboxManager.getInstance().clearCache();
+        MailboxManager.getInstance().cacheManager.clearCache();
         try {
             IndexStore.getFactory().destroy();
             cleanupAllIndexStores();

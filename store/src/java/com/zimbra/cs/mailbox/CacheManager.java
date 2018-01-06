@@ -1,5 +1,7 @@
 package com.zimbra.cs.mailbox;
 
+import com.zimbra.common.service.ServiceException;
+
 import java.util.Map;
 
 public interface CacheManager {
@@ -10,7 +12,7 @@ public interface CacheManager {
 
     //LocalCacheManager.MailboxMap getCache();
 
-    Map<String, Integer> getMailboxIds();
+    Map<String, Integer> getMailboxIds() throws ServiceException;
 
     Object retrieveFromCache(int mailboxId, boolean trackGC, MailboxManager mailboxManager) throws MailServiceException;
 

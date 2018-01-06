@@ -2,6 +2,7 @@ package com.zimbra.cs.mailbox;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.zimbra.common.localconfig.LC;
+import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.ZimbraLog;
 
 import java.lang.ref.SoftReference;
@@ -30,7 +31,7 @@ public class LocalCacheManager implements CacheManager {
     public LocalCacheManager() {
     }
 
-    public Map<String, Integer> getMailboxIds() {
+    public Map<String, Integer> getMailboxIds() throws ServiceException {
         return mailboxIds;
     }
 

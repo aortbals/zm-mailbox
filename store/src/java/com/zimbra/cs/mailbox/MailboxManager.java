@@ -633,7 +633,7 @@ public class MailboxManager {
      *  order. Note that <code>Mailbox</code>es are lazily created, so this is
      *  not the same as the set of mailboxes for accounts whose
      *  <code>zimbraMailHost</code> LDAP attribute points to this server. */
-    public int[] getMailboxIds() {
+    public int[] getMailboxIds() throws ServiceException {
         int i = 0;
         synchronized (this) {
             Collection<Integer> col = cacheManager.getMailboxIds().values();
@@ -659,7 +659,7 @@ public class MailboxManager {
      *  Note that <code>Mailbox</code>es are lazily created, so this is not
      *  the same as the set of accounts whose <code>zimbraMailHost</code> LDAP
      *  attribute points to this server.*/
-    public String[] getAccountIds() {
+    public String[] getAccountIds() throws ServiceException {
         int i = 0;
         synchronized (this) {
             Set<String> set = cacheManager.getMailboxIds().keySet();
@@ -676,7 +676,7 @@ public class MailboxManager {
      * @param accountId
      * @return
      */
-    public int lookupMailboxId(String accountId) {
+    public int lookupMailboxId(String accountId) throws ServiceException {
         Integer v;
         synchronized (this) {
             v = cacheManager.getMailboxIds().get(accountId);
@@ -860,7 +860,7 @@ public class MailboxManager {
         return mbox;
     }
 
-    protected void markMailboxDeleted(Mailbox mailbox) {
+    protected void markMailboxDeleted(Mailbox mailbox) throws ServiceException {
         String accountId = mailbox.getAccountId().toLowerCase();
         synchronized (this) {
             maintenanceLocks.remove(accountId);
